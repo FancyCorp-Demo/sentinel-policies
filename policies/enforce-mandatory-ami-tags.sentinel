@@ -1,5 +1,5 @@
-# Ensure that all AMIs in use have required tags
-#
+# Ensure that all AMIs in use have required tags for Production use
+
 # Limitation: This only checks aws_ami resources
 # If this were a real policy, we would also need to check:
 # - Is this AMI associated with a newly created/updated resource?
