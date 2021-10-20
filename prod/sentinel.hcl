@@ -23,3 +23,8 @@ policy "restrict-ami-owners" {
   source            = "../policies/restrict-ami-owners.sentinel"
   enforcement_level = "hard-mandatory"
 }
+
+policy "enforce-mandatory-ami-tags" {
+  source            = "../policies/enforce-mandatory-ami-tags.sentinel"
+  enforcement_level = "hard-mandatory"
+}
