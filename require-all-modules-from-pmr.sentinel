@@ -1,46 +1,47 @@
+# This policy uses the tfconfig/v2 import to require that all non-root
+# modules come from the Private Module Registry
+
 # Based On
-# https://github.com/hashicorp/terraform-guides/blob/master/governance/second-generation/cloud-agnostic/require-all-resources-from-pmr.sentinel
+# https://github.com/hashicorp/terraform-guides/blob/master/governance/third-generation/cloud-agnostic/require-all-resources-from-pmr.sentinel
 
-# This policy validates that all modules loaded directly by the
-# root module are in the Private Module Registry (PMR) of a TFC
-# server
+# Import the tfconfig/v2 import, but use the alias "tfconfig"
+import "tfconfig/v2" as tfconfig
 
-#####Imports#####
-import "tfconfig"
+# Import the tfrun import
+import "tfrun"
+
+# Standard strings import
 import "strings"
 
-#####Functions#####
+### Parameters ###
+# The address of the TFC or TFE server
+param address default "app.terraform.io"
 
-# Require all modules directly under root module to come from PMR
-require_modules_from_pmr = func(address, organization) {
+# The organizations on the TFC or TFE server that modules can some from
+param organizations
 
-	validated = true
-
-	for tfconfig.modules as name, m {
-		if not strings.has_prefix(m.source, address + "/" + organization) {
-			print("All non-root modules must come from the private module registry",
-				address + "/" + organization)
-			print("You included module,", name, ", with source,", m.source)
-			validated = false
+# Fnd modules called from root module that are not in the desired PMR
+violatingMCs = filter tfconfig.module_calls as index, mc {
+	mc.module_address is "" and
+		not any organizations as organization {
+			strings.has_prefix(mc.source, address + "/" + organization)
 		}
-	}
-
-	return validated
 }
 
-##### Global Variables #####
-# Define the address of the TFE server
-address = "app.terraform.io"
-
-# Define organization variable
-organization = "fancycorp"
-
-##### Rules #####
-
-# Call the validation functions
-all_non_root_modules_from_pmr = require_modules_from_pmr(address, organization)
+# Print violation messages for invalid modules
+if length(violatingMCs) > 0 and not tfrun.is_destroy {
+	print("All modules called from the root module must come from a",
+		"private module registry in one of these organizations:", organizations, " on server", address)
+	for violatingMCs as address, mc {
+		print("The module", mc.name, "called from the root module has source",
+			mc.source)
+	}
+}
 
 # Main rule
+validated = tfrun.is_destroy or
+	(length(violatingMCs) is 0)
+
 main = rule {
-	all_non_root_modules_from_pmr
+	validated is true
 }
