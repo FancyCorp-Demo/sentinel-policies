@@ -1,0 +1,59 @@
+# Ensure that all AMIs in use have required tags
+#
+# Limitation: This only checks aws_ami resources
+# If this were a real policy, we would also need to check:
+# - Is this AMI associated with a newly created/updated resource?
+#   - If so, fail
+#   - If not, then a similar advisory policy should fail as a warning
+# Are there any resources which reference AMIs by ID?
+#  - If so, fail - we don't have the required metadata to determine if it's Prod-safe
+
+# Based on
+# https://github.com/hashi-strawb/tf-sentinel-policies/blob/main/aws/enforce-mandatory-tags.sentinel
+
+# Imports mock data
+import "tfstate/v2" as tfstate
+import "strings"
+
+# Get all AWS resources from all modules
+aws_resources = filter tfstate.resources as _, rc {
+	rc.type is "aws_ami"
+
+}
+
+check_tags = func(resource, tag, value) {
+	# If the AMI has tags...
+	if (keys(resource.values) contains "tags" and resource.values.tags is not null and resource.values.tags is not empty) {
+
+		# And those tags contain the expected tag...
+		if (resource.values.tags contains tag) {
+
+			# And the value is correct...
+			if resource.values.tags[tag] == value {
+				return true
+			}
+		}
+	}
+
+	print(resource.address, resource.values.image_id, "is not yet approved for Production use")
+	return false
+}
+
+check_all_resources = func() {
+	# Assume pass until proven otherwise
+	rule_pass = true
+
+	for aws_resources as _, resource {
+		# if any instance of check_tags fails, set rule_pass to false
+		if not check_tags(resource, "Production", "true") {
+			rule_pass = false
+		}
+	}
+
+	return rule_pass
+}
+
+# Check that all resources have required tags
+main = rule {
+	(check_all_resources()) else true
+}
