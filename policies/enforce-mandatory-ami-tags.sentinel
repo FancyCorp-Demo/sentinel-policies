@@ -36,7 +36,6 @@ check_tags = func(resource, tag, value) {
 	}
 
 	print("Non-complaince detected in resource", resource.address)
-	print(" ", resource.values.name, resource.values.image_id, "is not yet approved for Production use")
 	return false
 }
 
@@ -47,6 +46,7 @@ check_all_resources = func() {
 	for aws_resources as _, resource {
 		# if any instance of check_tags fails, set rule_pass to false
 		if not check_tags(resource, "Production", "true") {
+			print(" ", resource.values.name, resource.values.image_id, "is not yet approved for Production use")
 			rule_pass = false
 		}
 	}
