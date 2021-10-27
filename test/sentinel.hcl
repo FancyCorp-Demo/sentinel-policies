@@ -25,6 +25,9 @@ policy "restrict-ami-owners" {
 }
 
 policy "enforce-mandatory-ami-tags" {
-  source            = "../policies/enforce-mandatory-ami-tags.sentinel"
-  enforcement_level = "soft-mandatory"
+  source = "../policies/enforce-mandatory-ami-tags.sentinel"
+
+  # We fully expect the Test env to be using non-Prod AMIs
+  # But we want to make sure they're highlighted
+  enforcement_level = "advisory"
 }
