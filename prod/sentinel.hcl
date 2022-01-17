@@ -1,3 +1,7 @@
+#
+# Modules
+#
+
 module "tfplan-functions" {
   source = "../policies/common-functions/tfplan-functions/tfplan-functions.sentinel"
 }
@@ -14,17 +18,29 @@ module "tfrun-functions" {
   source = "../policies/common-functions/tfrun-functions/tfrun-functions.sentinel"
 }
 
-policy "require-all-modules-from-pmr" {
-  source            = "../policies/require-all-modules-from-pmr.sentinel"
-  enforcement_level = "hard-mandatory"
-}
+#
+# AWS Policies
+#
 
-policy "restrict-ami-owners" {
+policy "aws/restrict-ami-owners" {
   source            = "../policies/restrict-ami-owners.sentinel"
   enforcement_level = "hard-mandatory"
 }
 
-policy "enforce-mandatory-ami-tags" {
+policy "aws/enforce-mandatory-ami-tags" {
   source            = "../policies/enforce-mandatory-ami-tags.sentinel"
+  enforcement_level = "hard-mandatory"
+}
+
+#
+# Azure Policies
+#
+
+#
+# Common Policies
+#
+
+policy "common/require-all-modules-from-pmr" {
+  source            = "../policies/require-all-modules-from-pmr.sentinel"
   enforcement_level = "hard-mandatory"
 }
