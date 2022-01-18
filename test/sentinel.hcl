@@ -58,7 +58,7 @@ policy "common/require-all-modules-from-pmr" {
   enforcement_level = "soft-mandatory"
 }
 
-policy "common/limit-cost-and-percentage-increase" {
-  source            = "../policies/common/limit-cost-and-percentage-increase.sentinel"
+policy "common/limit-proposed-monthly-cost" {
+  source            = "../policies/common/limit-proposed-monthly-cost.sentinel"
   enforcement_level = "soft-mandatory"
 }
