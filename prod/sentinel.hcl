@@ -36,6 +36,16 @@ policy "aws/enforce-mandatory-ami-tags" {
 # Azure Policies
 #
 
+policy "azure/restrict-vm-size" {
+  source            = "../policies/azure/restrict-vm-size.sentinel"
+  enforcement_level = "hard-mandatory"
+}
+
+policy "azure/restrict-vm-publisher" {
+  source            = "../policies/azure/restrict-vm-publisher.sentinel"
+  enforcement_level = "hard-mandatory"
+}
+
 #
 # Common Policies
 #
