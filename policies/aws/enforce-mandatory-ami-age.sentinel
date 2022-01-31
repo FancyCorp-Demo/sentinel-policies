@@ -1,0 +1,58 @@
+# Ensure that all AMIs are younger than 30 days
+
+# Limitation: This only checks aws_ami resources
+# If this were a real policy, we would also need to check:
+# - Is this AMI associated with a newly created/updated resource?
+#   - If so, fail
+#   - If not, then a similar advisory policy should fail as a warning
+# Are there any resources which reference AMIs by ID?
+#  - If so, fail - we don't have the required metadata to determine the age
+
+# Imports mock data
+import "tfstate/v2" as tfstate
+import "strings"
+import "time"
+
+# Get all AWS resources from all modules
+aws_resources = filter tfstate.resources as _, rc {
+	rc.type is "aws_ami"
+
+}
+
+check_age = func(resource, age_days) {
+	print("Creation Date", resource.values.creation_date)
+
+	ami_creation_date = time.load(resource.values.creation_date)
+	print("Creation Date", ami_creation_date.rfc3339)
+
+	cutoff_date = time.now.add(time.hour * 24 * age_days * -1)
+	print("Cutoff Date", cutoff_date.rfc3339)
+
+	if ami_creation_date.before(cutoff_date) {
+		print("Non-complaince detected in resource", resource.address)
+		print(" ", resource.values.name, resource.values.image_id, "is too old:")
+		print("   ", ami_creation_date.rfc3339, "<", cutoff_date.rfc3339)
+		return false
+	}
+
+	return true
+}
+
+check_all_resources = func() {
+	# Assume pass until proven otherwise
+	rule_pass = true
+
+	for aws_resources as _, resource {
+		# if any instance of check_age fails, set rule_pass to false
+		if not check_age(resource, 30) {
+			rule_pass = false
+		}
+	}
+
+	return rule_pass
+}
+
+# Check that all AMIs are younger than 30 days
+main = rule {
+	(check_all_resources()) else true
+}

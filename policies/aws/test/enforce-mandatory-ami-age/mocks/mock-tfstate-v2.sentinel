@@ -1,0 +1,106 @@
+terraform_version = "1.0.9"
+
+outputs = {}
+
+resources = {
+	"module.webserver-ireland.aws_ami.ubuntu": {
+		"address":        "module.webserver-ireland.aws_ami.ubuntu",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "module.webserver-ireland",
+		"name":           "ubuntu",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"tainted":        false,
+		"type":           "aws_ami",
+		"values": {
+			"architecture": "x86_64",
+			"arn":          "arn:aws:ec2:eu-west-1::image/ami-06252fe77e18168d4",
+			"block_device_mappings": [
+				{
+					"device_name": "/dev/sda1",
+					"ebs": {
+						"delete_on_termination": "true",
+						"encrypted":             "false",
+						"iops":                  "0",
+						"snapshot_id":           "snap-0e085792cb763482f",
+						"throughput":            "0",
+						"volume_size":           "8",
+						"volume_type":           "gp2",
+					},
+					"no_device":    "",
+					"virtual_name": "",
+				},
+				{
+					"device_name":  "/dev/sdb",
+					"ebs":          {},
+					"no_device":    "",
+					"virtual_name": "ephemeral0",
+				},
+				{
+					"device_name":  "/dev/sdc",
+					"ebs":          {},
+					"no_device":    "",
+					"virtual_name": "ephemeral1",
+				},
+			],
+			"creation_date":    "2042-10-19T13:57:02.000Z",
+			"description":      null,
+			"ena_support":      true,
+			"executable_users": null,
+			"filter": [
+				{
+					"name": "name",
+					"values": [
+						"strawbtest/se-onboarding/webserver/v0.1.0",
+					],
+				},
+				{
+					"name": "virtualization-type",
+					"values": [
+						"hvm",
+					],
+				},
+			],
+			"hypervisor":        "xen",
+			"id":                "ami-06252fe77e18168d4",
+			"image_id":          "ami-06252fe77e18168d4",
+			"image_location":    "711129375688/strawbtest/se-onboarding/webserver/v0.1.0",
+			"image_owner_alias": null,
+			"image_type":        "machine",
+			"kernel_id":         null,
+			"most_recent":       true,
+			"name":              "strawbtest/se-onboarding/webserver/v0.1.0",
+			"name_regex":        null,
+			"owner_id":          "711129375688",
+			"owners": [
+				"self",
+			],
+			"platform":          null,
+			"platform_details":  "Linux/UNIX",
+			"product_codes":     [],
+			"public":            false,
+			"ramdisk_id":        null,
+			"root_device_name":  "/dev/sda1",
+			"root_device_type":  "ebs",
+			"root_snapshot_id":  "snap-0e085792cb763482f",
+			"sriov_net_support": "simple",
+			"state":             "available",
+			"state_reason": {
+				"code":    "UNSET",
+				"message": "UNSET",
+			},
+			"tags": {
+				"Name":       "StrawbTest",
+				"Owner":      "lucy.davinhart@hashicorp.com",
+				"Packer":     "true",
+				"Production": "true",
+				"Purpose":    "SE Onboarding Week 6 - TFC",
+				"TTL":        "24h",
+			},
+			"usage_operation":     "RunInstances",
+			"virtualization_type": "hvm",
+		},
+	},
+}

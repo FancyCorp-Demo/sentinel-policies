@@ -32,6 +32,11 @@ policy "aws/enforce-mandatory-ami-tags" {
   enforcement_level = "hard-mandatory"
 }
 
+policy "aws/enforce-mandatory-ami-age" {
+  source            = "../policies/aws/enforce-mandatory-ami-age.sentinel"
+  enforcement_level = "hard-mandatory"
+}
+
 #
 # Azure Policies
 #
