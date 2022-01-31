@@ -20,13 +20,8 @@ aws_resources = filter tfstate.resources as _, rc {
 }
 
 check_age = func(resource, age_days) {
-	print("Creation Date", resource.values.creation_date)
-
 	ami_creation_date = time.load(resource.values.creation_date)
-	print("Creation Date", ami_creation_date.rfc3339)
-
 	cutoff_date = time.now.add(time.hour * 24 * age_days * -1)
-	print("Cutoff Date", cutoff_date.rfc3339)
 
 	if ami_creation_date.before(cutoff_date) {
 		print("Non-complaince detected in resource", resource.address)
