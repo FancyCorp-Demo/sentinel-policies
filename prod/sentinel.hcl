@@ -59,3 +59,8 @@ policy "common/limit-proposed-monthly-cost" {
   source            = "../policies/common/limit-proposed-monthly-cost.sentinel"
   enforcement_level = "hard-mandatory"
 }
+
+policy "common/enforce-hcp-packer-channel" {
+  source            = "../policies/common/enforce-hcp-packer-channel.sentinel"
+  enforcement_level = "hard-mandatory"
+}

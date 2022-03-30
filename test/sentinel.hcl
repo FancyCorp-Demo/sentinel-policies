@@ -62,3 +62,10 @@ policy "common/limit-proposed-monthly-cost" {
   source            = "../policies/common/limit-proposed-monthly-cost.sentinel"
   enforcement_level = "soft-mandatory"
 }
+
+policy "common/enforce-hcp-packer-channel" {
+  source = "../policies/common/enforce-hcp-packer-channel.sentinel"
+
+  # We expect that the Test env will use non-prod channels, so this is allowed
+  enforcement_level = "advisory"
+}

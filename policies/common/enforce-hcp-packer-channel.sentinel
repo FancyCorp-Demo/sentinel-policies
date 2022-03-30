@@ -1,0 +1,42 @@
+# Imports mock data
+import "tfstate/v2" as tfstate
+import "strings"
+
+# Get all Packer iterations
+packer_resources = filter tfstate.resources as _, rc {
+	rc.type is "hcp_packer_iteration"
+}
+
+check_channel = func(resource, expected_channel) {
+	# If the resource has a channel (which it should, but just make sure)
+	if (keys(resource.values) contains "channel" and resource.values.channel is not null and resource.values.channel is not "") {
+
+		# And that channel is correct...
+		if (resource.values.channel == expected_channel) {
+			return true
+		}
+	}
+
+	return false
+}
+
+check_all_resources = func() {
+	# Assume pass until proven otherwise
+	rule_pass = true
+
+	for packer_resources as _, resource {
+		# if any instance of check_tags fails, set rule_pass to false
+		if not check_channel(resource, "production") {
+			print("Non-complaince detected in resource", resource.address)
+			print(" ", resource.values.bucket_name, resource.values.fingerprint, "is not yet approved for Production use")
+			rule_pass = false
+		}
+	}
+
+	return rule_pass
+}
+
+# Check that all images sourced from HCP Packer are using the Production channel
+main = rule {
+	(check_all_resources()) else true
+}
