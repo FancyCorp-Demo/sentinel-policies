@@ -49,11 +49,6 @@ policy "azure/restrict-vm-size" {
   enforcement_level = "soft-mandatory"
 }
 
-policy "azure/restrict-vm-publisher" {
-  source            = "../policies/azure/restrict-vm-publisher.sentinel"
-  enforcement_level = "soft-mandatory"
-}
-
 #
 # Common Policies
 #
