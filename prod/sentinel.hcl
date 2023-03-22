@@ -43,7 +43,7 @@ policy "aws/enforce-mandatory-ami-age" {
 
 policy "azure/restrict-vm-size" {
   source            = "../policies/azure/restrict-vm-size.sentinel"
-  enforcement_level = "soft-mandatory"
+  enforcement_level = "hard-mandatory"
 }
 
 #
