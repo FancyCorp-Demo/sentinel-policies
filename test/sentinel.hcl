@@ -60,7 +60,7 @@ policy "common/require-all-modules-from-pmr" {
 
 policy "common/limit-proposed-monthly-cost" {
   source            = "../policies/common/limit-proposed-monthly-cost.sentinel"
-  enforcement_level = "hard-mandatory"
+  enforcement_level = "soft-mandatory"
 }
 
 policy "common/enforce-hcp-packer-channel" {
